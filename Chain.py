@@ -1,6 +1,7 @@
 import pandas as pd
 import openpyxl as xl 
 import unicodedata
+from textblob import TextBlob
 class Chain:
     
     def __init__(self):
@@ -17,7 +18,10 @@ class Chain:
         """
         chain = chain.lower()
         chain = unicodedata.normalize('NFKD', chain).encode('ASCII', 'ignore').decode('utf8')
-        chain = chain.split()
+        chain = chain.replace("\\n", "")
+        chain = chain.replace(".", " .")
+        chain = TextBlob(chain)
+        chain = chain.words
         return chain
     
     def occurences(self, chain):
@@ -73,5 +77,7 @@ class Chain:
 chain = Chain()
 tableau = chain.getDataInFile('/home/marion/Documents/ProgrammationC/Excel/workbook.xlsx')
 chainTransforme = chain.board(tableau)
+print(chainTransforme)
 chain.occurences(chainTransforme)
 chain.createExcelFile()
+
